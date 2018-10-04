@@ -13,24 +13,30 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 public class HW {
         
  public static class Map extends Mapper<LongWritable, Text, Text, IntWritable> {
-     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-	context.write(value,new IntWritable());
-}
-      }
-     
+    public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String line = value.toString();
+        StringTokenizer tokenizer = new StringTokenizer(line);
+        while (tokenizer.hasMoreTokens()) {
+            String token = tokenizer.nextToken();
+            context.write(new Text(token), new IntWritable(0));
+        }
+    }
+ } 
         
  public static class Reduce extends Reducer<Text, IntWritable, Text, IntWritable> {
-
-    public void reduce(Text key, Iterable<IntWritable> values, Context context) 
-      throws IOException, InterruptedException {
-        context.write(key, new IntWritable());
+	int count=0;
+    public void reduce(Text key, Iterable<IntWritable> values, Context context)  throws IOException, InterruptedException {
+	count+=1;
+        }
+    public void cleanup(Context context) throws IOException, InterruptedException{
+        context.write(new Text("count"), new IntWritable(count));
     }
  }
         
  public static void main(String[] args) throws Exception {
     Configuration conf = new Configuration();
         
-        Job job = new Job(conf, "hw");
+        Job job = new Job(conf, "dc");
     
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(IntWritable.class);
