@@ -1,2 +1,0 @@
-# Hadoop-Practice
-Hadoop Practice
