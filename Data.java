@@ -10,35 +10,38 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
         
-public class WordCount {
+public class Data {
         
- public static class Map extends Mapper<LongWritable, Text, Text, IntWritable> {
-    public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+ public static class Map extends Mapper<Object, Text, Text, IntWritable> {
+private final static IntWritable one = new IntWritable(1);
+private Text word = new Text();
+    public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
         String line = value.toString();
-        StringTokenizer tokenizer = new StringTokenizer(line);
+        StringTokenizer tokenizer = new StringTokenizer(line,",");
         while (tokenizer.hasMoreTokens()) {
-            String token = tokenizer.nextToken();
-            context.write(new Text(token), new IntWritable(1));
+            word.set(tokenizer.nextToken());
+            context.write(word, one);
         }
     }
  } 
         
  public static class Reduce extends Reducer<Text, IntWritable, Text, IntWritable> {
-
+private IntWritable result = new IntWritable();
     public void reduce(Text key, Iterable<IntWritable> values, Context context) 
       throws IOException, InterruptedException {
         int sum = 0;
         for (IntWritable val : values) {
             sum += val.get();
         }
-        context.write(key, new IntWritable(sum));
+	result.set(sum);
+        context.write(key, result);
     }
  }
         
  public static void main(String[] args) throws Exception {
     Configuration conf = new Configuration();
         
-        Job job = new Job(conf, "wordcount");
+        Job job = new Job(conf, "test");
     
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(IntWritable.class);
