@@ -15,7 +15,7 @@ public class R {
 public static class Map extends Mapper<Object, Text, Text, Text> {    
 public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 	String line=value.toString();
-	String newline=line.replaceAll("[-+#%*]","");
+	String newline=line.replaceAll("[-+#%x*]","");
 	String a=",,";
 	String b=",0,";
 	String c="NR";
