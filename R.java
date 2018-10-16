@@ -18,11 +18,13 @@ public void map(Object key, Text value, Context context) throws IOException, Int
 	String newline=line.replaceAll("[-+#%*]","");
 	String a=",,";
 	String b=",0,";
+	String c="NR";
+	String d="0";
 	String finalline=newline.replace(a,b);
-
+	String finalone=finalline.replace(c,d);
 //	N1=datas[3].replaceAll("[\\pP\\p{Punct}a-zA-Z]","");
 //	if(N1.equals("")){N1="0";}
-	context.write(new Text(finalline.toString()),new Text(""));
+	context.write(new Text(finalone.toString()),new Text(""));
 }
 }
         
