@@ -16,13 +16,10 @@ public static class Map extends Mapper<Object, Text, Text, Text> {
 public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 	String line=value.toString();
 	String newline=line.replaceAll("[-+#%*]","");
-	String a=",,";
-	String b=",0,";
-	String finalline=newline.replace(a,b);
-
+	String[] finalline=newline.split(",");
 //	N1=datas[3].replaceAll("[\\pP\\p{Punct}a-zA-Z]","");
 //	if(N1.equals("")){N1="0";}
-	context.write(new Text(finalline.toString()),new Text(""));
+	context.write(new Text(finalline[1]),new Text(""));
 }
 }
         
